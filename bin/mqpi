@@ -1,0 +1,29 @@
+require 'mqtt'
+require 'net/http'
+require 'tmpdir'
+require 'json'
+require 'digest'
+
+require 'logger'
+require 'optparse'
+require 'socket'
+
+require 'mqpi'
+
+handler = MQPI::Handler.new(:port => 1883, :host => 'localhost', :name => Socket.gethostname)
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: mqpi [options]"
+
+  opts.on("-nNAME", "--name=NAME", String, "Use NAME as client name, default: #{handler.name}") do |v|
+    handler.name = v
+  end
+  opts.on("-pPORT", "--port=PORT", OptionParser::DecimalInteger, "Connect to broker at PORT, default: #{handler.port}") do |p|
+    handler.port = p
+  end
+  opts.on("-HHOST", "--host=HOST", String, "Connect to broker at HOST, default: #{handler.host}") do |h|
+    handler.host = h
+  end
+end.parse!
+
+handler.run

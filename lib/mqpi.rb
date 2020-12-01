@@ -1,6 +1,8 @@
 require "mqpi/version"
+require 'mqpi/handler'
+require 'mqpi/job'
 
-module Mqpi
+module MQPI
   class Error < StandardError; end
   # Your code goes here...
 end

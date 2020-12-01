@@ -2,7 +2,7 @@ require_relative 'lib/mqpi/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "mqpi"
-  spec.version       = Mqpi::VERSION
+  spec.version       = MQPI::VERSION
   spec.authors       = ["Adam Ruzicka"]
   spec.email         = ["aruzicka@redhat.com"]
 

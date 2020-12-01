@@ -3,4 +3,4 @@ RUN dnf install -y ruby git
 WORKDIR /app
 ADD ./ /app/
 RUN bundle install
-ENTRYPOINT bundle exec ruby bin/mqpi
+ENTRYPOINT ["/usr/bin/bundle", "exec", "ruby", "bin/mqpi"]

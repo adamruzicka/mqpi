@@ -24,6 +24,9 @@ OptionParser.new do |opts|
   opts.on("-HHOST", "--host=HOST", String, "Connect to broker at HOST, default: #{handler.host}") do |h|
     handler.host = h
   end
+  opts.on("-i", "--insecure", "Do not verify certificates") do |v|
+    handler.job_options[:insecure] = true
+  end
 end.parse!
 
 handler.run

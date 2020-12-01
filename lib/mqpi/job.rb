@@ -1,6 +1,6 @@
 module MQPI
   class Job
-    def initialize(task_id, step_id, files, main, callback_host, otp, logger: Logger.new(STDOUT))
+    def initialize(task_id, step_id, files, main, callback_host, otp, logger: Logger.new(STDOUT), options: {})
       @task_id = task_id
       @step_id = step_id
       @files = files
@@ -9,6 +9,7 @@ module MQPI
       @otp = otp
       @logger = logger
       @log_prefix = "#{task_id} #{step_id}"
+      @options = options
     end
 
     def execute
@@ -37,7 +38,10 @@ module MQPI
 
     def download_files
       uri = URI(@callback_host)
-      Net::HTTP.start(uri.host, uri.port) do |http|
+      Net::HTTP.start(uri.host, uri.port,
+        :use_ssl => uri.scheme == 'https',
+        :verify_mode => @options[:insecure] ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+      ) do |http|
         @files.each do |path|
           name = File.basename(path)
           uri.path = path
@@ -56,9 +60,9 @@ module MQPI
       end
     end
 
-    def self.new_from_message(message, logger = Logger.new(STDOUT))
+    def self.new_from_message(message, logger = Logger.new(STDOUT), options = {})
       data = JSON.parse(message)
-      Job.new(*data.values_at(*%w[task_id step_id files main callback_host otp]), logger: logger)
+      Job.new(*data.values_at(*%w[task_id step_id files main callback_host otp]), logger: logger, options: {})
     end
   end
 end

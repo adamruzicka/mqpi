@@ -1,11 +1,12 @@
 module MQPI
   class Handler
-    attr_accessor :name, :port, :host
-    def initialize(name: nil, port: nil, host: nil, logger: Logger.new(STDOUT))
+    attr_accessor :name, :port, :host, :job_options
+    def initialize(name: nil, port: nil, host: nil, logger: Logger.new(STDOUT), job_options: {})
       @name = name
       @port = port
       @host = host
       @logger = logger
+      @job_options = job_options
     end
 
     def run
@@ -17,7 +18,7 @@ module MQPI
 
       client.get(topic => 1) do |_topic, message|
         @logger.debug "Forking new process"
-        pid = fork { Job.new_from_message(message, @logger).execute }
+        pid = fork { Job.new_from_message(message, @logger, @job_options).execute }
         Process.detach(pid) # Or maybe double fork to reparent under init?
       end
     end

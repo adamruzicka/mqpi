@@ -1,5 +1,5 @@
 FROM fedora:33
-RUN dnf install -y ruby git
+RUN dnf install -y ruby git procps-ng
 WORKDIR /app
 ADD ./ /app/
 RUN bundle install

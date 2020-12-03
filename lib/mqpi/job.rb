@@ -62,7 +62,7 @@ module MQPI
 
     def self.new_from_message(message, logger = Logger.new(STDOUT), options = {})
       data = JSON.parse(message)
-      Job.new(*data.values_at(*%w[task_id step_id files main callback_host otp]), logger: logger, options: {})
+      Job.new(*data.values_at(*%w[task_id step_id files main callback_host otp]), logger: logger, options: options)
     end
   end
 end

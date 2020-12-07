@@ -16,6 +16,7 @@ module MQPI
       @logger.debug("#{@log_prefix} Processing job in process #{Process.pid}")
       with_working_directory do
         download_files
+        extract_files
         execute_main
         # unreachable
       end
@@ -34,6 +35,16 @@ module MQPI
     def execute_main
       @logger.debug("#{@log_prefix} Executing into ./#{@main}")
       Kernel.exec("./#{@main}")
+    end
+
+    def extract_files
+      @files.each do |file|
+        if file.end_with? '.tar'
+          name = File.basename(file)
+          @logger.debug("Extracting #{name}")
+          system("tar", "-xf", name)
+        end
+      end
     end
 
     def download_files

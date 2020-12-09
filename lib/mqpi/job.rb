@@ -34,6 +34,7 @@ module MQPI
 
     def execute_main
       @logger.debug("#{@log_prefix} Executing into ./#{@main}")
+      STDOUT.flush
       Kernel.exec("./#{@main}")
     end
 
